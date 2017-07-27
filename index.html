@@ -72,7 +72,7 @@ const checkSubscription = subscription => {
 const onSubscription = subscription => {
     checkSubscription(subscription);
 
-    fetch('/', {
+    fetch('/subscribe', {
         method: 'POST',
         body: JSON.stringify({ subscription, isSubscribed }),
         headers: {
