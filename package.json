@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": "tomasdev/zeus",
   "author": "Tomas Roggero <hola@tomasroggero.com>",
   "license": "MIT",
   "dependencies": {
