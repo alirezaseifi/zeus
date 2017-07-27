@@ -61,15 +61,26 @@ function urlB64ToUint8Array(base64String) {
   return outputArray;
 }
 
-const onSubscription = subscription => {
-    console.log(subscription);
-    isSubscribed = subscription && subscription.endpoint;
+const checkSubscription = subscription => {
+    isSubscribed = subscription && subscription.endpoint && !subscription.unsubscribed;
 
     // Update UI
     button.disabled = false;
     button.innerHTML = isSubscribed ? 'Unsubscribe me' : 'Subscribe me';
+};
 
-    // TODO: send to server
+const onSubscription = subscription => {
+    checkSubscription(subscription);
+
+    fetch('/', {
+        method: 'POST',
+        body: JSON.stringify({ subscription, isSubscribed }),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+    }).then(res => res.json())
+    .then(console.log.bind(console));
 };
 
 const onError = error => console.error('Service Worker Error', error);
@@ -81,7 +92,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     .then(swreg => {
         swRegistration = swreg;
         swRegistration.pushManager.getSubscription()
-        .then(onSubscription);
+        .then(checkSubscription);
     })
     .catch(onError);
 } else {
@@ -96,9 +107,14 @@ window.addEventListener('load', () => {
 
             if (isSubscribed) {
                 swRegistration.pushManager.getSubscription()
-                  .then(subscription => subscription && subscription.unsubscribe())
-                  .catch(onError)
-                  .then(onSubscription);
+                    .then(subscription => {
+                        if (subscription.unsubscribe()) {
+                            subscription.unsubscribed = true;
+                        }
+                        return subscription;
+                    })
+                    .catch(onError)
+                    .then(onSubscription);
                 return;
             }
 
