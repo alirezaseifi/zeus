@@ -121,7 +121,7 @@ const server = http.createServer(async (req, res) => {
     const ok = () => respond(res, 200, json('saved'));
     const error = err => respond(res, 500, json(err, 'error'));
 
-    if (req.url === '/' && req.method === 'POST') {
+    if (req.url === '/subscribe' && req.method === 'POST') {
         saveSubscriber(body).then(ok).catch(error);
     } else {
         res.writeHead(404, {
