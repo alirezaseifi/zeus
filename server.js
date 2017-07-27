@@ -169,6 +169,7 @@ const fetchDeals = () => {
     Promise.all(promises).then(responses => {
         let items = responses
                         .reduce((accumulator, arr) => accumulator.concat(arr), [])
+                        .filter(item => !!item.guid)
                         .sort((a, b) => a.date < b.date ? 1 : -1);
 
         Deal.insertMany(items)
@@ -181,7 +182,7 @@ const fetchDeals = () => {
             console.timeEnd('[CRON] fetchDeals()');
             setTimeout(fetchDeals, 5 * 60 * 1000);
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error('[CRON] insert error', err.message));
     })
     .catch(err => console.error('[CRON] Error', err));
 };
