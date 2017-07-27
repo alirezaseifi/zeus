@@ -197,6 +197,7 @@ const notifyAllSubscribers = (docs, newSave) => {
             body: title,
             url: process.env.URL_PREFIX + url
         })).catch(err => console.log('3', err)));
+        console.log('[CRON] Pushed notifications:', docs.length);
         return subscriber.update({ lastNotification: newSave }).exec();
     }))
     .catch(err => console.log('1', err));
