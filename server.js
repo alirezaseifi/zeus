@@ -121,6 +121,10 @@ const server = http.createServer(async (req, res) => {
     const ok = () => respond(res, 200, json('saved'));
     const error = err => respond(res, 500, json(err, 'error'));
 
+    if (req.url === '/log') {
+        return respond(res, 200, fs.readFileSync('/var/log/nginx/nodejs-zeus.log'));
+    }
+
     if (req.url === '/subscribe' && req.method === 'POST') {
         saveSubscriber(body).then(ok).catch(error);
     } else {
