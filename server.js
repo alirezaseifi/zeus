@@ -152,22 +152,26 @@ const fetchDeals = () => {
     console.time('[CRON] fetchDeals()');
     let promises = SOURCES.map(source =>
         request(source)
-        .then(response =>
-            xml2json.toJson(response, { object: true }).rss.channel.item.map(
-                ({
-                    title,
-                    link,
-                    pubDate,
-                    guid: { $t }
-                }) => ({
-                    title,
-                    url: link,
-                    date: new Date(pubDate),
-                    guid: $t
-                })
-            ).filter(item => item.date > lastSave)
+        .then(
+            response =>
+                xml2json.toJson(response, { object: true }).rss.channel.item.map(
+                    ({
+                        title,
+                        link,
+                        pubDate,
+                        guid: { $t }
+                    }) => ({
+                        title,
+                        url: link,
+                        date: new Date(pubDate),
+                        guid: $t
+                    })
+                ).filter(item => item.date > lastSave),
+            err => {
+                console.error('[CRON] ERROR PARSING FEED', source, err.statusCode);
+                return new Promise(resolve => resolve([]));
+            }
         )
-        .catch(err => console.error('[CRON] ERROR PARSING FEED', source, err))
     );
 
     Promise.all(promises).then(responses => {
@@ -176,7 +180,7 @@ const fetchDeals = () => {
                         .filter(item => !!item.guid)
                         .sort((a, b) => a.date < b.date ? 1 : -1);
 
-        Deal.insertMany(items)
+        Deal.insertMany(items, { ordered: false })
         .then(docs => {
             if (items[0]) {
                 notifyAllSubscribers(docs, items[0].date);
@@ -197,17 +201,21 @@ const notifyAllSubscribers = (docs, newSave) => {
         { lastNotification: { $lt: lastSave } }
     ]).exec()
     .then(subscribers => subscribers.forEach(subscriber => {
-        docs.forEach(({ title, url }) => webpush.sendNotification(JSON.parse(subscriber.subscription), JSON.stringify({
-            body: title,
-            url: process.env.URL_PREFIX + url
-        })).catch(err => console.log('3', err)));
+        docs.forEach(({ title, url }) =>
+            webpush.sendNotification(
+                JSON.parse(subscriber.subscription), JSON.stringify({
+                    body: title,
+                    url: process.env.URL_PREFIX + url
+                })
+            ).catch(err => console.log('[CRON] ERROR PUSH:', err))
+        );
         console.log('[CRON] Pushed notifications:', docs.length);
         return subscriber.update({ lastNotification: newSave }).exec();
     }))
-    .catch(err => console.log('1', err));
+    .catch(err => console.log('[CRON] SUBSCRIBER ERROR:', err));
 };
 
 Deal.findOne().select('date').sort('-date').exec()
 .then(lastItem => lastSave = lastItem && lastItem.date || 0)
 .then(fetchDeals)
-.catch(err => console.log('2', err));
+.catch(err => console.log('[CRON] STARTUP FAIL:', err));
