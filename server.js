@@ -189,8 +189,7 @@ const fetchDeals = () => {
             console.log(`[CRON] ${new Date} – Saved ${items.length} new results.`);
             console.timeEnd('[CRON] fetchDeals()');
             setTimeout(fetchDeals, 5 * 60 * 1000);
-        })
-        .catch(err => console.error('[CRON] insert error', err.message));
+        }, (err, docs) => console.error('[CRON] insert error', err, 'but', docs));
     })
     .catch(err => console.error('[CRON] Error', err));
 };
