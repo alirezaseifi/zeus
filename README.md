@@ -12,4 +12,4 @@ Zeus is an application that triggers OS notifications using Google Firebase abou
 1. ~~Add Feedback form (including Suggest source feature)~~ 2017-07-31
 2. Personalize departure airport (user accounts)
 3. Normalize data (and therefore send normalized data instead of original sources)
-4. Add more sources
+4. Add more sources (http://www.spyfares.com/)
