@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ENV=local nodemon server.js"
+    "dev": "ENV=local PORT=3008 nodemon server.js"
   },
   "repository": "tomasdev/zeus",
   "author": "Tomas Roggero <hola@tomasroggero.com>",

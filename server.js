@@ -128,6 +128,10 @@ const server = http.createServer(async (req, res) => {
         return exec('journalctl -n 30 -u nodejs-zeus --no-pager', (error, stdout, stderr) => respond(res, 200, stdout));
     }
 
+    if (req.url === '/list') {
+        return getPastDeals(res);
+    }
+
     if (req.url === '/subscribe' && req.method === 'POST') {
         saveSubscriber(body).then(ok).catch(error);
     } else {
@@ -183,17 +187,22 @@ const fetchDeals = () => {
                         .filter(item => !!item.guid)
                         .sort((a, b) => a.date < b.date ? 1 : -1);
 
-        Deal.insertMany(items, { ordered: false })
-        .then(
-            docs => console.log(`[CRON] ${new Date} – Saved ${docs.length} new results.`),
-            err => console.error('[CRON] insert error')
-        )
-        .then(() => {
-            notifyAllSubscribers(items, items[0].date);
-            lastSave = items[0].date;
+        if (items.length) {
+            Deal.insertMany(items, { ordered: false })
+            .then(
+                docs => console.log(`[CRON] ${new Date} – Saved ${docs.length} new results.`),
+                err => console.error('[CRON] insert error')
+            )
+            .then(() => {
+                notifyAllSubscribers(items, items[0].date);
+                lastSave = items[0].date;
+                console.timeEnd('[CRON] fetchDeals()');
+                setTimeout(fetchDeals, 5 * 60 * 1000);
+            });
+        } else {
             console.timeEnd('[CRON] fetchDeals()');
             setTimeout(fetchDeals, 5 * 60 * 1000);
-        });
+        }
     })
     .catch(err => console.error('[CRON] Error', err));
 };
@@ -222,3 +231,20 @@ Deal.findOne().select('date').sort('-date').exec()
 .then(lastItem => lastSave = lastItem && lastItem.date || 0)
 .then(fetchDeals)
 .catch(err => console.log('[CRON] STARTUP FAIL:', err));
+
+
+const getPastDeals = function (res) {
+    Deal.find().select('date title url').sort('-date').limit(50).exec()
+    .then(data => fs.readFileSync(__dirname + '/list.html').toString().replace('{{DATA}}', JSON.stringify(data)))
+    .then(HTML => {
+        res.writeHead(200, {
+            'Content-Type': 'text/html;charset=UTF-8'
+        });
+        res.end(HTML);
+    }).catch(err => {
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        res.end(err.message);
+    });
+}
