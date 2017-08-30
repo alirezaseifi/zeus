@@ -10,6 +10,7 @@ const
     xml2json = require('xml2json'),
     http = require('http'),
     fs = require('fs'),
+    log = require('npmlog'),
     { exec } = require('child_process');
 
 const CRON_TIME = 1 * 60 * 1000;
@@ -144,7 +145,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(process.env.PORT || 3000);
-console.log('Server started at port', process.env.PORT || 3000);
+log.info('', 'Server started at port ' + (process.env.PORT || 3000));
 
 
 const SOURCES = [
@@ -156,27 +157,35 @@ const SOURCES = [
 let lastSave = 0;
 
 const fetchDeals = () => {
-    console.log(`[CRON] fetchDeals() last saved item date: ${lastSave}`);
+    log.info('CRON', `fetchDeals() last saved item date: ${lastSave}`);
     console.time('[CRON] fetchDeals()');
     let promises = SOURCES.map(source =>
         request(source)
         .then(
-            response =>
-                xml2json.toJson(response, { object: true }).rss.channel.item.map(
-                    ({
-                        title,
-                        link,
-                        pubDate,
-                        guid: { $t }
-                    }) => ({
-                        title,
-                        url: link,
-                        date: new Date(pubDate),
-                        guid: $t
-                    })
-                ).filter(item => item.date > lastSave),
+            response => {
+                try {
+                    const json = xml2json.toJson(response, { object: true });
+                    const arr = json.rss.channel.item.map(
+                        ({
+                            title,
+                            link,
+                            pubDate,
+                            guid: { $t }
+                        }) => ({
+                            title,
+                            url: link,
+                            date: new Date(pubDate),
+                            guid: $t
+                        })
+                    ).filter(item => item.date > lastSave)
+                    return arr;
+                } catch (e) {
+                    log.warn('CRON', 'ERROR PARSING FEED: %j', e);
+                    return [];
+                }
+            },
             err => {
-                console.error('[CRON] ERROR PARSING FEED', source, err.statusCode);
+                log.error('CRON', `ERROR FETCHING FEED: ${source} ${err.statusCode}`);
                 return new Promise(resolve => resolve([]));
             }
         )
@@ -191,8 +200,8 @@ const fetchDeals = () => {
         if (items.length) {
             Deal.insertMany(items, { ordered: false })
             .then(
-                docs => console.log(`[CRON] ${new Date} – Saved ${docs.length} new results.`),
-                err => console.error('[CRON] insert error')
+                docs => log.info('CRON', `Saved ${docs.length} new results @ ${+new Date()}`),
+                err => log.error('CRON', 'ERROR INSERT: %j', err)
             )
             .then(() => {
                 notifyAllSubscribers(items, items[0].date);
@@ -205,7 +214,7 @@ const fetchDeals = () => {
             setTimeout(fetchDeals, CRON_TIME);
         }
     })
-    .catch(err => console.error('[CRON] Error', err));
+    .catch(err => log.error('CRON', 'GENERIC ERROR: %j', err));
 };
 
 const notifyAllSubscribers = (docs, newSave) => {
@@ -220,18 +229,18 @@ const notifyAllSubscribers = (docs, newSave) => {
                     body: title,
                     url: process.env.URL_PREFIX + url
                 })
-            ).catch(err => console.log('[CRON] ERROR PUSH:', err))
+            ).catch(err => log.error('CRON', 'ERROR PUSH: %j', err))
         );
-        console.log('[CRON] Pushed notifications:', docs.length);
+        log.info('CRON', 'Pushed notifications:', docs.length);
         return subscriber.update({ lastNotification: newSave }).exec();
     }))
-    .catch(err => console.log('[CRON] SUBSCRIBER ERROR:', err));
+    .catch(err => log.error('CRON', 'ERROR SUBSCRIBER: %j', err));
 };
 
 Deal.findOne().select('date').sort('-date').exec()
 .then(lastItem => lastSave = lastItem && lastItem.date || 0)
 .then(fetchDeals)
-.catch(err => console.log('[CRON] STARTUP FAIL:', err));
+.catch(err => log.error('CRON', 'STARTUP FAIL: %j', err));
 
 
 const getPastDeals = function (res) {
