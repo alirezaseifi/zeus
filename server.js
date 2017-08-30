@@ -175,7 +175,7 @@ const fetchDeals = () => {
                             title,
                             url: link,
                             date: new Date(pubDate),
-                            guid: $t
+                            guid: $t + '#_' + Math.floor(Math.rand() * 10000)
                         })
                     ).filter(item => item.date > lastSave)
                     return arr;
