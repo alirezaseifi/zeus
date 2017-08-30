@@ -1,0 +1,309 @@
+body { font: 10px Monaco, monospace; white-space: nowrap }
+.ccze_date {
+    color: #66d9ef
+}
+
+.ccze_host {
+    color: #c48dff
+}
+
+.ccze_process {
+    color: #a6e22e
+}
+
+.ccze_pid {
+    color: #f2f2f2
+}
+
+.ccze_pid-sqbr {
+    color: #a6e22e
+}
+
+.ccze_default {
+    color: #66d9ef
+}
+
+.ccze_email {
+    color: #a6e22e
+}
+
+.ccze_subject {
+    color: #f92672
+}
+
+.ccze_dir {
+    color: #66d9ef
+}
+
+.ccze_file {
+    color: #66d9ef
+}
+
+.ccze_size {
+    color: #f2f2f2
+}
+
+.ccze_user {
+    color: #fd971f
+}
+
+.ccze_httpcodes {
+    color: #f2f2f2
+}
+
+.ccze_getsize {
+    color: #f92672
+}
+
+.ccze_get {
+    color: #a6e22e
+}
+
+.ccze_post {
+    color: #a6e22e
+}
+
+.ccze_head {
+    color: #a6e22e
+}
+
+.ccze_put {
+    color: #a6e22e
+}
+
+.ccze_connect {
+    color: #a6e22e
+}
+
+.ccze_trace {
+    color: #a6e22e
+}
+
+.ccze_unknown {
+    color: #66d9ef
+}
+
+.ccze_gettime {
+    color: #f92672
+}
+
+.ccze_uri {
+    color: #a6e22e
+}
+
+.ccze_ident {
+    color: #f2f2f2
+}
+
+.ccze_ctype {
+    color: #f2f2f2
+}
+
+.ccze_error {
+    color: #e52222
+}
+
+.ccze_miss {
+    color: #e52222
+}
+
+.ccze_hit {
+    color: #fd971f
+}
+
+.ccze_deny {
+    color: #e52222
+}
+
+.ccze_refresh {
+    color: #f2f2f2
+}
+
+.ccze_swapfail {
+    color: #f2f2f2
+}
+
+.ccze_debug {
+    color: #f2f2f2
+}
+
+.ccze_warning {
+    color: #e52222
+}
+
+.ccze_direct {
+    color: #f2f2f2
+}
+
+.ccze_parent {
+    color: #fd971f
+}
+
+.ccze_swapnum {
+    color: #c48dff
+    text-background: #f2f2f2
+}
+
+.ccze_create {
+    color: #f2f2f2
+}
+
+.ccze_swapin {
+    color: #f2f2f2
+}
+
+.ccze_swapout {
+    color: #f2f2f2
+}
+
+.ccze_release {
+    color: #f2f2f2
+}
+
+.ccze_mac {
+    color: #f2f2f2
+}
+
+.ccze_version {
+    color: #f2f2f2
+}
+
+.ccze_address {
+    color: #f2f2f2
+}
+
+.ccze_numbers {
+    color: #f2f2f2
+}
+
+.ccze_signal {
+    color: #fd971f
+}
+
+.ccze_service {
+    color: #f92672
+}
+
+.ccze_prot {
+    color: #f92672
+}
+
+.ccze_bad {
+    color: #fd971f
+}
+
+.ccze_good {
+    color: #a6e22e
+}
+
+.ccze_system {
+    color: #66d9ef
+}
+
+.ccze_incoming {
+    color: #f2f2f2
+}
+
+.ccze_outgoing {
+    color: #f2f2f2
+}
+
+.ccze_uniqn {
+    color: #f2f2f2
+}
+
+.ccze_repeat {
+    color: #f2f2f2
+}
+
+.ccze_field {
+    color: #a6e22e
+}
+
+.ccze_chain {
+    color: #66d9ef
+}
+
+.ccze_percentage {
+    color: #fd971f
+}
+
+.ccze_ftpcodes {
+    color: #66d9ef
+}
+
+.ccze_keyword {
+    color: #fd971f
+}
+
+.ccze_pkgstatus {
+    color: #a6e22e
+}
+
+.ccze_pkg {
+    color: #e52222
+}
+
+.ccze_black {
+    color: black
+}
+
+.ccze_red {
+    color: #e52222
+}
+
+.ccze_green {
+    color: #a6e22e
+}
+
+.ccze_yellow {
+    color: #fd971f
+}
+
+.ccze_blue {
+    color: #c48dff
+}
+
+.ccze_cyan {
+    color: #66d9ef
+}
+
+.ccze_magenta {
+    color: #f92672
+}
+
+.ccze_white {
+    color: #f2f2f2
+}
+
+.ccze_bold_black {
+    color: black
+}
+
+.ccze_bold_red {
+    color: #e52222
+}
+
+.ccze_bold_green {
+    color: #a6e22e
+}
+
+.ccze_bold_yellow {
+    color: #fd971f
+}
+
+.ccze_bold_blue {
+    color: #c48dff
+}
+
+.ccze_bold_cyan {
+    color: #66d9ef
+}
+
+.ccze_bold_magenta {
+    color: #f92672
+}
+
+.ccze_bold_white {
+    color: #f2f2f2
+}

@@ -127,7 +127,14 @@ const server = http.createServer(async (req, res) => {
     const error = err => respond(res, 500, json(err, 'error'));
 
     if (req.url === '/log') {
-        return exec('journalctl -n 30 -u nodejs-zeus.service --no-pager | ccze -h', (error, stdout, stderr) => respond(res, 200, stdout, 'text/html'));
+        return exec(
+            'journalctl -n 30 -u nodejs-zeus.service --no-pager | ccze -h -o cssfile="/log.css"',
+            (error, stdout, stderr) => respond(res, 200, stdout, 'text/html')
+        );
+    }
+
+    if (req.url === '/log.css') {
+        return respond(res, 200, fs.readFileSync(__dirname + '/log.css').toString(), 'text/css');
     }
 
     if (req.url === '/list') {
