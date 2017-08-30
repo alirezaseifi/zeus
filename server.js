@@ -57,9 +57,9 @@ const Subscriber = mongoose.model('Subscriber', {
 
 // APP ITSELF
 
-const respond = (res, status, data) => {
+const respond = (res, status, data, type) => {
     res.writeHead(status, {
-        'Content-Type': 'application/json'
+        'Content-Type': type || 'application/json'
     });
     res.end(data);
 };
@@ -127,7 +127,7 @@ const server = http.createServer(async (req, res) => {
     const error = err => respond(res, 500, json(err, 'error'));
 
     if (req.url === '/log') {
-        return exec('journalctl -n 30 -u nodejs-zeus.service --no-pager | ccze -h', (error, stdout, stderr) => respond(res, 200, stdout));
+        return exec('journalctl -n 30 -u nodejs-zeus.service --no-pager | ccze -h', (error, stdout, stderr) => respond(res, 200, stdout, 'text/html'));
     }
 
     if (req.url === '/list') {
