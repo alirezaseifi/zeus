@@ -127,7 +127,7 @@ const server = http.createServer(async (req, res) => {
     const error = err => respond(res, 500, json(err, 'error'));
 
     if (req.url === '/log') {
-        return exec('journalctl -n 30 -u nodejs-zeus.service --no-pager', (error, stdout, stderr) => respond(res, 200, stdout));
+        return exec('journalctl -n 30 -u nodejs-zeus.service --no-pager | ccze -h', (error, stdout, stderr) => respond(res, 200, stdout));
     }
 
     if (req.url === '/list') {
