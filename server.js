@@ -168,12 +168,20 @@ const fetchDeals = () => {
     log.info('CRON', `fetchDeals() last saved item date: ${lastSave}`);
     console.time('[CRON] fetchDeals()');
     let promises = SOURCES.map(source =>
-        request(source)
+        request({
+            url: source,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'
+            }
+        })
         .then(
             response => {
                 try {
                     const json = xml2json.toJson(response, { object: true });
-                    const arr = json.rss.channel.item && json.rss.channel.item.map(
+                    if (!json || !json.rss || !json.rss.channel || !json.rss.channel.item) {
+                        log.debug('CRON', `Something went bad for ${source} \n ${response} \n`);
+                    }
+                    const arr = (json.rss.channel.item || []).map(
                         ({
                             title,
                             link,
@@ -185,16 +193,16 @@ const fetchDeals = () => {
                             date: new Date(pubDate),
                             guid: $t + '#_' + Math.floor(Math.random() * 10000)
                         })
-                    ).filter(item => item.date > lastSave) || [];
+                    ).filter(item => item.date > lastSave);
                     log.info('CRON', `SUCCESS ${source} (${arr.length} new items)`);
                     return arr;
                 } catch (e) {
-                    log.warn('CRON', 'ERROR PARSING FEED: %j', e);
+                    // log.warn('CRON', 'ERROR PARSING FEED: %j', e);
                     return [];
                 }
             },
             err => {
-                log.error('CRON', `ERROR FETCHING FEED: ${source} ${err.statusCode}`);
+                log.warn('CRON', `ERROR FETCHING FEED: ${source} ${err.statusCode}`);
                 return new Promise(resolve => resolve([]));
             }
         )
