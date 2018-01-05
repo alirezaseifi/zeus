@@ -158,7 +158,8 @@ log.info('', 'Server started at port ' + (process.env.PORT || 3000));
 const SOURCES = [
     'http://www.secretflying.com/posts/category/usa/feed/',
     'http://www.theflightdeal.com/category/flight-deals/nyc/feed/',
-    'http://www.flyertalk.com/forum/external.php?type=RSS2&forumids=372,740'
+    'http://www.flyertalk.com/forum/external.php?type=RSS2&forumids=372,740',
+    'https://www.airfarewatchdog.com/rss/blog/'
 ];
 
 let lastSave = 0;
