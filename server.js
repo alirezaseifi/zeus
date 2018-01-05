@@ -186,14 +186,15 @@ const fetchDeals = () => {
                             title,
                             link,
                             pubDate,
-                            guid: { $t }
+                            guid
                         }) => ({
                             title,
                             url: link,
                             date: new Date(pubDate),
-                            guid: $t + '#_' + Math.floor(Math.random() * 10000)
+                            guid: (guid && guid.$t || link) + '#_' + Math.floor(Math.random() * 10000)
                         })
                     ).filter(item => item.date > lastSave);
+                    log.info('DEBUG', `${arr[0]}`);
                     log.info('CRON', `SUCCESS ${source} ${response.statusCode} (${arr.length} new items)`);
                     return arr;
                 } catch (e) {
