@@ -173,7 +173,7 @@ const fetchDeals = () => {
             response => {
                 try {
                     const json = xml2json.toJson(response, { object: true });
-                    const arr = json.rss.channel.item.map(
+                    const arr = json.rss.channel.item && json.rss.channel.item.map(
                         ({
                             title,
                             link,
@@ -185,7 +185,8 @@ const fetchDeals = () => {
                             date: new Date(pubDate),
                             guid: $t + '#_' + Math.floor(Math.random() * 10000)
                         })
-                    ).filter(item => item.date > lastSave)
+                    ).filter(item => item.date > lastSave) || [];
+                    log.info('CRON', `SUCCESS ${source} (${arr.length} new items)`);
                     return arr;
                 } catch (e) {
                     log.warn('CRON', 'ERROR PARSING FEED: %j', e);
