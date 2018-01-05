@@ -194,8 +194,8 @@ const fetchDeals = () => {
                             guid: (guid && guid.$t || link) + '#_' + Math.floor(Math.random() * 10000)
                         })
                     ).filter(item => item.date > lastSave);
-                    log.info('DEBUG', `${arr[0]}`);
-                    log.info('CRON', `SUCCESS ${source} ${response.statusCode} (${arr.length} new items)`);
+                    log.info('DEBUG', `${json.rss.channel.item}`);
+                    log.info('CRON', `SUCCESS ${source} (${arr.length} new items)`);
                     return arr;
                 } catch (e) {
                     // log.warn('CRON', 'ERROR PARSING FEED: %j', e);
