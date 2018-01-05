@@ -179,7 +179,7 @@ const fetchDeals = () => {
                 try {
                     const json = xml2json.toJson(response, { object: true });
                     if (!json || !json.rss || !json.rss.channel || !json.rss.channel.item) {
-                        log.debug('CRON', `Something went bad for ${source} \n ${response} \n`);
+                        log.warn('CRON', `Something went bad for ${source} \n ${response} \n`);
                     }
                     const arr = (json.rss.channel.item || []).map(
                         ({
@@ -194,7 +194,7 @@ const fetchDeals = () => {
                             guid: $t + '#_' + Math.floor(Math.random() * 10000)
                         })
                     ).filter(item => item.date > lastSave);
-                    log.info('CRON', `SUCCESS ${source} (${arr.length} new items)`);
+                    log.info('CRON', `SUCCESS ${source} ${response.statusCode} (${arr.length} new items)`);
                     return arr;
                 } catch (e) {
                     // log.warn('CRON', 'ERROR PARSING FEED: %j', e);
