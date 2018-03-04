@@ -17,6 +17,12 @@
     padding: 20px 0 0;
     text-shadow: 0 3px 5px #bbb;
 }
+@media screen and (max-width: 767px) {
+  td {
+    display: block;
+padding: 0;
+  }
+}
 </style>
 </head>
 <body>
@@ -28,7 +34,7 @@
             <h2 class="mdl-card__title-text">Zeus: Past Deals</h2>
         </div>
         <div class="mdl-card__supporting-text" style="margin:0 auto">
-            <table class="mdl-data-table mdl-js-data-table mdl-typography--text-left">
+            <table class="mdl-data-table mdl-js-data-table mdl-typography--text-left" style="white-space: initial;">
                 <tbody></tbody>
             </table>
         </div>
