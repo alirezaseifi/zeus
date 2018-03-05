@@ -73,7 +73,7 @@ data.map(entry => {
         fragment.appendChild(item);
     } else {
         fragment.querySelector('li:last-child .mdl-list__item-primary-content').innerHTML +=
-            `<span style="display: block"><a rel="noreferrer" href="${entry.url}" target="_blank">${entry.title}</a></span>`;
+            `<span style="display: block;margin:0 0 10px;"><a rel="noreferrer" href="${entry.url}" target="_blank">${entry.title}</a></span>`;
     }
 });
 container.appendChild(fragment);
