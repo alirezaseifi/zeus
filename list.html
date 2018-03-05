@@ -51,16 +51,17 @@ const
     container = document.querySelector('ul'),
     fragment = document.createDocumentFragment();
 
-data.forEach(({ timestamp, url, title }) => {
-    const
-        item = document.createElement('li'),
-        date = new Date(timestamp);
+data.map(entry => {
+    entry.date = new Date(entry.date);
+    return entry;
+}).forEach(({ date, url, title }) => {
+    const item = document.createElement('li');
     item.className = 'mdl-list__item mdl-list__item--three-line';
     item.innerHTML = `
-        <span class="mdl-list__item-secondary-content">${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</span>
+        <!-- <span class="mdl-list__item-secondary-content"></span> -->
         <span class="mdl-list__item-primary-content">
             <span><a href="${url}" target="_blank">${title}</a></span>
-            <span class="mdl-list__item-text-body"><!-- optional description here --></span>
+            <span class="mdl-list__item-text-body">${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</span>
         </span>
     `;
     fragment.appendChild(item);
