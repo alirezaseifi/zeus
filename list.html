@@ -55,8 +55,8 @@ data.forEach(({ timestamp, url, title }) => {
     const
         item = document.createElement('li'),
         date = new Date(timestamp);
-    li.className = 'mdl-list__item mdl-list__item--three-line';
-    li.innerHTML = `
+    item.className = 'mdl-list__item mdl-list__item--three-line';
+    item.innerHTML = `
         <span class="mdl-list__item-secondary-content">${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</span>
         <span class="mdl-list__item-primary-content">
             <span><a href="${url}" target="_blank">${title}</a></span>
