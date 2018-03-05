@@ -262,7 +262,7 @@ Deal.findOne().select('date').sort('-date').exec()
 
 
 const getPastDeals = function (res) {
-    Deal.find().select('date title url').sort('-date').limit(50).exec()
+    Deal.find().select('date title url').sort('-date').limit(150).exec()
     .then(data => fs.readFileSync(__dirname + '/list.html').toString().replace('{{DATA}}', JSON.stringify(data)))
     .then(HTML => {
         res.writeHead(200, {
