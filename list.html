@@ -61,8 +61,8 @@ data.map(entry => {
     }
     return save;
 }, []).forEach(entry => {
-    const item = fragment.querySelector('li:last-child') || document.createElement('li');
     if (typeof entry === 'string') {
+        const item = document.createElement('li');
         item.className = 'mdl-list__item mdl-list__item--three-line';
         item.innerHTML = `
             <!-- <span class="mdl-list__item-secondary-content"></span> -->
@@ -72,7 +72,7 @@ data.map(entry => {
         `;
         fragment.appendChild(item);
     } else {
-        item.querySelector('.mdl-list__item-primary-content').innerHTML +=
+        fragment.querySelector('li:last-child .mdl-list__item-primary-content').innerHTML +=
             `<span style="display: block"><a rel="noreferrer" href="${entry.url}" target="_blank">${entry.title}</a></span>`;
     }
 });
