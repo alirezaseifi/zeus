@@ -34,9 +34,7 @@ padding: 0;
             <h2 class="mdl-card__title-text">Zeus: Past Deals</h2>
         </div>
         <div class="mdl-card__supporting-text" style="margin:0 auto">
-            <table class="mdl-data-table mdl-js-data-table mdl-typography--text-left" style="white-space: initial;">
-                <tbody></tbody>
-            </table>
+            <ul class="demo-list-three mdl-list"></ul>
         </div>
         <div class="mdl-card__actions mdl-card--border">
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect zeus-action--load-more" disabled>Load more</button>
@@ -50,21 +48,24 @@ padding: 0;
 <script>
 const
     data = {{DATA}},
-    table = document.querySelector('.mdl-data-table tbody'),
+    container = document.querySelector('ul'),
     fragment = document.createDocumentFragment();
 
-data.forEach(item => {
+data.forEach(({ date, url, title }) => {
     const
-        tr = document.createElement('tr'),
-        date = new Date(item.date);
-    tr.className = '"mdl-list__item';
-    tr.innerHTML = `
-        <td>${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</td>
-        <td class="mdl-data-table__cell--non-numeric"><a href="${item.url}" target="_blank">${item.title}</a></td>
+        item = document.createElement('li'),
+        date = new Date(date);
+    li.className = 'mdl-list__item mdl-list__item--three-line';
+    li.innerHTML = `
+        <span class="mdl-list__item-secondary-content">${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</span>
+        <span class="mdl-list__item-primary-content">
+            <span><a href="${url}" target="_blank">${title}</a></span>
+            <span class="mdl-list__item-text-body"><!-- optional description here --></span>
+        </span>
     `;
-    fragment.appendChild(tr);
+    fragment.appendChild(item);
 });
-table.appendChild(fragment);
+container.appendChild(fragment);
 </script>
 
 </body>
