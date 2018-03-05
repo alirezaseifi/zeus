@@ -51,10 +51,10 @@ const
     container = document.querySelector('ul'),
     fragment = document.createDocumentFragment();
 
-data.forEach(({ date, url, title }) => {
+data.forEach(({ timestamp, url, title }) => {
     const
         item = document.createElement('li'),
-        date = new Date(date);
+        date = new Date(timestamp);
     li.className = 'mdl-list__item mdl-list__item--three-line';
     li.innerHTML = `
         <span class="mdl-list__item-secondary-content">${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}</span>
